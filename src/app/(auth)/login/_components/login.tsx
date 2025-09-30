@@ -10,20 +10,46 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Form } from '@/components/ui/form';
-import { INITIAL_LOGIN_FORM } from '@/constants/auth-constant';
-import { LoginForm, loginSchema } from '@/validations/auth-validation';
+import {
+  INITIAL_LOGIN_FORM,
+  INITIAL_STATE_LOGIN_FORM,
+} from '@/constants/auth-constant';
+import { LoginForm, loginSchemaForm } from '@/validations/auth-validation';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { startTransition, useActionState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { login } from '../actions';
+import { Loader2 } from 'lucide-react';
 
 export default function Login() {
   const form = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(loginSchemaForm),
     defaultValues: INITIAL_LOGIN_FORM,
   });
 
+  const [loginState, loginAction, isPendingLogin] = useActionState(
+    login,
+    INITIAL_STATE_LOGIN_FORM
+  );
+
   const onSubmit = form.handleSubmit(async (data) => {
-    console.log(data);
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    startTransition(() => {
+      loginAction(formData);
+    });
   });
+
+  useEffect(() => {
+    if (loginState?.status === 'error') {
+      startTransition(() => {
+        loginAction(null);
+      });
+    }
+  }, [loginState]);
 
   return (
     <Card>
@@ -36,19 +62,21 @@ export default function Login() {
           <form onSubmit={onSubmit} className="space-y-4">
             <FormInput
               form={form}
-              type="email"
               name="email"
               label="Email"
               placeholder="Insert email here"
+              type="email"
             />
             <FormInput
               form={form}
-              type="password"
               name="password"
               label="Password"
-              placeholder="********"
+              placeholder="******"
+              type="password"
             />
-            <Button type="submit">Login</Button>
+            <Button type="submit">
+              {isPendingLogin ? <Loader2 className="animate-spin" /> : 'Login'}
+            </Button>
           </form>
         </Form>
       </CardContent>

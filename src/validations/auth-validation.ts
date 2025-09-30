@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const loginSchema = z.object({
+export const loginSchemaForm = z.object({
   email: z
     .email({ message: 'Please enter a valid email' })
     .min(1, { message: 'Email is required' })
@@ -11,4 +11,4 @@ export const loginSchema = z.object({
     .nonempty({ message: 'Password is required' }),
 });
 
-export type LoginForm = z.infer<typeof loginSchema>;
+export type LoginForm = z.infer<typeof loginSchemaForm>;
