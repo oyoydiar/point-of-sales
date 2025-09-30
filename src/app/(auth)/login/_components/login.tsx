@@ -24,6 +24,7 @@ export default function Login() {
   const onSubmit = form.handleSubmit(async (data) => {
     console.log(data);
   });
+
   return (
     <Card>
       <CardHeader className="text-center">
