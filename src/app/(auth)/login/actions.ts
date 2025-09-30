@@ -7,6 +7,7 @@ import { loginSchemaForm } from '@/validations/auth-validation';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import z from 'zod';
 
 export async function login(
   prevState: AuthFormState,
@@ -22,9 +23,13 @@ export async function login(
   });
 
   if (!validatedFields.success) {
+    const errorsTree = z.treeifyError(validatedFields.error);
     return {
       status: 'error',
-      errors: validatedFields.error.flatten().fieldErrors,
+      errors: {
+        ...errorsTree,
+        _form: [],
+      },
     };
   }
 
