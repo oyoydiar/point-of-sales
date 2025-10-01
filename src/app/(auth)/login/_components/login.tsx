@@ -79,9 +79,15 @@ export default function Login() {
               placeholder="******"
               type="password"
             />
-            <Button type="submit">
-              {isPendingLogin ? <Loader2 className="animate-spin" /> : 'Login'}
-            </Button>
+            <div className="flex justify-end">
+              <Button type="submit" disabled={isPendingLogin}>
+                {isPendingLogin ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  'Login'
+                )}
+              </Button>
+            </div>
           </form>
         </Form>
       </CardContent>
