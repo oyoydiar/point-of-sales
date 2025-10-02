@@ -3,6 +3,7 @@ import './globals.css';
 import { ThemeProvider } from '@/providers/theme-provider';
 import AuthStoreProvider from '@/providers/auth-store-provider';
 import { cookies } from 'next/headers';
+import ReactQueryProvider from '@/providers/react-query-provider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,16 +28,18 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthStoreProvider profile={profile}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </AuthStoreProvider>
+        <ReactQueryProvider>
+          <AuthStoreProvider profile={profile}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </AuthStoreProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
