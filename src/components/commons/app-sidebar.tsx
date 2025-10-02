@@ -1,6 +1,6 @@
 'use client';
 
-import { EllipsisVertical, LogOut, Store } from 'lucide-react';
+import { EllipsisVertical, LogOut, Coffee } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -24,8 +24,12 @@ import {
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '../ui/avatar';
 import { AvatarImage } from '@radix-ui/react-avatar';
-import { SIDEBAR_MENU_LIST } from '@/constants/sidebar-constant';
+import {
+  SIDEBAR_MENU_LIST,
+  SidebarMenuKey,
+} from '@/constants/sidebar-constant';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function AppSidebar() {
   const { isMobile } = useSidebar();
@@ -55,24 +59,24 @@ export default function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent className="flex flex-col gap-2">
             <SidebarMenu>
-              {SIDEBAR_MENU_LIST[
-                profile.role as 'admin' | 'cashier' | 'kitchen'
-              ]?.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <a
-                      href={item.url}
-                      className={cn('px-4 py-3 h-auto', {
-                        'bg-teal-500 text-white hover:bg-teal-500 hover:text-white':
-                          pathname === item.url,
-                      })}
-                    >
-                      {item.icon && <item.icon />}
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {SIDEBAR_MENU_LIST[profile.role as SidebarMenuKey]?.map(
+                (item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild tooltip={item.title}>
+                      <a
+                        href={item.url}
+                        className={cn('px-4 py-3 h-auto', {
+                          'bg-teal-500 text-white hover:bg-teal-500 hover:text-white':
+                            pathname === item.url,
+                        })}
+                      >
+                        {item.icon && <item.icon />}
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -88,7 +92,7 @@ export default function AppSidebar() {
                 >
                   <Avatar className="h-8 w-8 rounded-lg">
                     <AvatarImage src="" alt="" />
-                    <AvatarFallback className="rounded-lg">A</AvatarFallback>
+                    <AvatarFallback className="rounded-lg">D</AvatarFallback>
                   </Avatar>
                   <div className="leading-tight">
                     <h4 className="truncate font-medium">
@@ -111,7 +115,7 @@ export default function AppSidebar() {
                   <div className="flex items-center gap-2 px-1 py-1.5">
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage src="" alt="" />
-                      <AvatarFallback className="rounded-lg">A</AvatarFallback>
+                      <AvatarFallback className="rounded-lg">D</AvatarFallback>
                     </Avatar>
                     <div className="leading-tight">
                       <h4 className="truncate font-medium">
