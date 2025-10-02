@@ -1,6 +1,6 @@
 'use client';
 
-import { EllipsisVertical, LogOut, Coffee } from 'lucide-react';
+import { EllipsisVertical, LogOut, Store } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -30,6 +30,7 @@ import {
 } from '@/constants/sidebar-constant';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { signOut } from '@/actions/auth-action';
 
 export default function AppSidebar() {
   const { isMobile } = useSidebar();
@@ -47,7 +48,7 @@ export default function AppSidebar() {
             <SidebarMenuButton size="lg" asChild>
               <div className="font-semibold">
                 <div className="bg-teal-500 flex p-2 items-center justify-center rounded-md">
-                  <Coffee className="size-4" />
+                  <Store className="size-4" />
                 </div>
                 WPU Cafe
               </div>
@@ -129,7 +130,7 @@ export default function AppSidebar() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
                     <LogOut />
                     Logout
                   </DropdownMenuItem>
