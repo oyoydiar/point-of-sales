@@ -1,6 +1,4 @@
-import { DarkModeToggle } from '@/components/commons/dark-mode-toggle';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 
 export default function Home() {

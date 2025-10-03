@@ -1,5 +1,4 @@
 import { DarkModeToggle } from '@/components/commons/dark-mode-toggle';
-import { Toaster } from '@/components/ui/sonner';
 import { Store } from 'lucide-react';
 import { ReactNode } from 'react';
 
@@ -21,7 +20,6 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
           Point of Sales
         </div>
         {children}
-        <Toaster position="top-center" />
       </div>
     </div>
   );
