@@ -8,15 +8,26 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
+import PaginantionDataTable from './paginantion-data-table';
 
 export default function DataTable({
   header,
   data,
   isLoading,
+  totalPages,
+  currentPage,
+  onChangePage,
+  currentLimit,
+  onChangeLimit,
 }: {
   header: string[];
   data: (string | ReactNode)[][];
   isLoading?: boolean;
+  totalPages: number;
+  currentPage: number;
+  onChangePage: (page: number) => void;
+  currentLimit: number;
+  onChangeLimit: (page: number) => void;
 }) {
   return (
     <div className="w-full flex flex-col gap-4">
@@ -67,6 +78,18 @@ export default function DataTable({
           </TableBody>
         </Table>
       </Card>
+      <div className="flex items-center justify-between">
+        <div></div>
+        {totalPages > 1 && (
+          <div className="flex justify-end">
+            <PaginantionDataTable
+              totalPages={totalPages}
+              currentPage={currentPage}
+              onChangePage={onChangePage}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
