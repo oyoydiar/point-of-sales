@@ -25,7 +25,7 @@ export default async function RootLayout({
   const profile = JSON.parse(cookiesStore.get('user_profile')?.value ?? '{}');
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning={true}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

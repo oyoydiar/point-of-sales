@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import PaginationDataTable from './paginantion-data-table';
+import PaginationDataTable from './pagination-data-table';
 import { Label } from '../ui/label';
 import {
   Select,
@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '../ui/select';
-import { LIMIT_LIST } from '@/constants/data-table-constant';
+import { LIMIT_LISTS } from '@/constants/data-table-constant';
 
 export default function DataTable({
   header,
@@ -96,7 +96,7 @@ export default function DataTable({
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Limit</SelectLabel>
-                {LIMIT_LIST.map((limit) => (
+                {LIMIT_LISTS.map((limit) => (
                   <SelectItem key={limit} value={limit.toString()}>
                     {limit}
                   </SelectItem>

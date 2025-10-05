@@ -20,9 +20,20 @@ export default function PaginationDataTable({
   return (
     <Pagination>
       <PaginationContent>
+        {/* ← Previous Button */}
         <PaginationItem>
-          <PaginationPrevious />
+          <PaginationPrevious
+            onClick={() => {
+              if (currentPage > 1) {
+                onChangePage(currentPage - 1);
+              } else {
+                onChangePage(totalPages);
+              }
+            }}
+          />
         </PaginationItem>
+
+        {/* ← Number Buttons */}
         {Array.from({ length: totalPages }).map((_, i) => {
           const page = i + 1;
 
@@ -49,12 +60,13 @@ export default function PaginationDataTable({
             (page === currentPage - 2 && page > 1) ||
             (page === currentPage + 2 && page < totalPages)
           ) {
-            <PaginationItem key={`ellipsis-${page}`}>
-              <PaginationEllipsis />
-            </PaginationItem>;
+            return <PaginationEllipsis key={`ellipsis-${page}`} />;
           }
+
+          return null;
         })}
 
+        {/* ← Next Button */}
         <PaginationItem>
           <PaginationNext
             onClick={() => {
