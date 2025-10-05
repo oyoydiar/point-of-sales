@@ -8,7 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import PaginantionDataTable from './paginantion-data-table';
+import PaginationDataTable from './paginantion-data-table';
+import { Label } from '../ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+import { LIMIT_LIST } from '@/constants/data-table-constant';
 
 export default function DataTable({
   header,
@@ -16,8 +27,8 @@ export default function DataTable({
   isLoading,
   totalPages,
   currentPage,
-  onChangePage,
   currentLimit,
+  onChangePage,
   onChangeLimit,
 }: {
   header: string[];
@@ -25,9 +36,9 @@ export default function DataTable({
   isLoading?: boolean;
   totalPages: number;
   currentPage: number;
-  onChangePage: (page: number) => void;
   currentLimit: number;
-  onChangeLimit: (page: number) => void;
+  onChangePage: (page: number) => void;
+  onChangeLimit: (limit: number) => void;
 }) {
   return (
     <div className="w-full flex flex-col gap-4">
@@ -47,8 +58,8 @@ export default function DataTable({
               <TableRow key={`tr-${rowIndex}`}>
                 {row.map((column, columnIndex) => (
                   <TableCell
+                    className="px-6 py-3"
                     key={`tc-${rowIndex}-${columnIndex}`}
-                    className="px-6 py-3 "
                   >
                     {column}
                   </TableCell>
@@ -57,20 +68,14 @@ export default function DataTable({
             ))}
             {data?.length === 0 && !isLoading && (
               <TableRow>
-                <TableCell
-                  colSpan={header.length}
-                  className="h-24 text-center "
-                >
+                <TableCell colSpan={header.length} className="h-24 text-center">
                   No Result Data
                 </TableCell>
               </TableRow>
             )}
             {isLoading && (
               <TableRow>
-                <TableCell
-                  colSpan={header.length}
-                  className="h-24 text-center "
-                >
+                <TableCell colSpan={header.length} className="h-24 text-center">
                   Loading...
                 </TableCell>
               </TableRow>
@@ -79,13 +84,33 @@ export default function DataTable({
         </Table>
       </Card>
       <div className="flex items-center justify-between">
-        <div></div>
+        <div className="flex items-center gap-2">
+          <Label>Limit</Label>
+          <Select
+            value={currentLimit.toString()}
+            onValueChange={(value) => onChangeLimit(Number(value))}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select Limit" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Limit</SelectLabel>
+                {LIMIT_LIST.map((limit) => (
+                  <SelectItem key={limit} value={limit.toString()}>
+                    {limit}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
         {totalPages > 1 && (
           <div className="flex justify-end">
-            <PaginantionDataTable
-              totalPages={totalPages}
+            <PaginationDataTable
               currentPage={currentPage}
               onChangePage={onChangePage}
+              totalPages={totalPages}
             />
           </div>
         )}

@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from '../ui/pagination';
 
-export default function PaginantionDataTable({
+export default function PaginationDataTable({
   totalPages,
   currentPage,
   onChangePage,
