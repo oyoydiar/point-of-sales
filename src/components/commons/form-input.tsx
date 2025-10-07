@@ -1,5 +1,11 @@
 import { FieldValues, Path, UseFormReturn } from 'react-hook-form';
-import { FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../ui/form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 
@@ -23,21 +29,23 @@ export default function FormInput<T extends FieldValues>({
       render={({ field: { ...rest } }) => (
         <FormItem>
           <FormLabel>{label}</FormLabel>
-          {type === 'textarea' ? (
-            <Textarea
-              {...rest}
-              placeholder={placeholder}
-              autoComplete="off"
-              className="resize-none"
-            />
-          ) : (
-            <Input
-              {...rest}
-              type={type}
-              placeholder={placeholder}
-              autoComplete="off"
-            />
-          )}
+          <FormControl>
+            {type === 'textarea' ? (
+              <Textarea
+                {...rest}
+                placeholder={placeholder}
+                autoComplete="off"
+                className="resize-none"
+              />
+            ) : (
+              <Input
+                {...rest}
+                type={type}
+                placeholder={placeholder}
+                autoComplete="off"
+              />
+            )}
+          </FormControl>
           <FormMessage className="text-xs" />
         </FormItem>
       )}
