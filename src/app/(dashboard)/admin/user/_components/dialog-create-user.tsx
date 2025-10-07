@@ -24,7 +24,7 @@ import { useForm } from 'react-hook-form';
 import { createUser } from '../actions';
 import { toast } from 'sonner';
 
-export default function DialogCreateUSer() {
+export default function DialogCreateUser({ refetch }: { refetch: () => void }) {
   const form = useForm<CreateUserForm>({
     resolver: zodResolver(createUserSchema),
     defaultValues: INITIAL_CREATE_USER_FORM,
@@ -33,7 +33,7 @@ export default function DialogCreateUSer() {
   const [createUserState, createUserAction, isPendingCreateUser] =
     useActionState(createUser, INITIAL_STATE_CREATE_USER);
 
-  const onSubmit = form.handleSubmit(async (data) => {
+  const onSubmit = form.handleSubmit((data) => {
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
@@ -55,6 +55,7 @@ export default function DialogCreateUSer() {
       toast.success('Create User Success');
       form.reset();
       document.querySelector<HTMLButtonElement>('[data-state="open"]')?.click();
+      refetch();
     }
   }, [createUserState]);
 
@@ -62,8 +63,8 @@ export default function DialogCreateUSer() {
     <DialogContent className="sm:max-w-[425px]">
       <Form {...form}>
         <DialogHeader>
-          <DialogTitle>Create an User</DialogTitle>
-          <DialogDescription>Register a new User</DialogDescription>
+          <DialogTitle>Create an user</DialogTitle>
+          <DialogDescription>Register a new user</DialogDescription>
         </DialogHeader>
         <form onSubmit={onSubmit} className="space-y-4">
           <FormInput

@@ -28,6 +28,7 @@ export const INITIAL_CREATE_USER_FORM = {
   role: '',
   avatar_url: '',
   email: '',
+  password: '',
 };
 
 export const INITIAL_STATE_CREATE_USER = {
