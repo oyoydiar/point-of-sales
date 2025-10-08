@@ -22,10 +22,10 @@ export const createUserSchema = z.object({
     .nonempty({ message: 'Password is required' }),
   name: z.string().min(1, { message: 'Name is required' }),
   role: z.string().min(1, { message: 'Role is required' }),
-  // avatar_url: z.union([
-  //   z.string().min(1, { message: 'Image Url is required' }),
-  //   z.instanceof(File),
-  // ]),
+  avatar_url: z.union([
+    z.string().min(1, { message: 'Image Url is required' }),
+    z.instanceof(File),
+  ]),
 });
 
 export type LoginForm = z.infer<typeof loginSchemaForm>;
