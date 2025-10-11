@@ -42,6 +42,15 @@ export const INITIAL_STATE_CREATE_USER = {
     _form: [],
   },
 };
+export const INITIAL_STATE_UPDATE_USER = {
+  status: 'idle',
+  errors: {
+    name: [],
+    role: [],
+    avatar_url: [],
+    _form: [],
+  },
+};
 
 export const ROLE_LISTS = [
   {
