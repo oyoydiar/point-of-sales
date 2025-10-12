@@ -1,13 +1,12 @@
 'use server';
 
-import { uploadFile } from '@/actions/storage-action';
+import { deleteFile, uploadFile } from '@/actions/storage-action';
 import { createClient } from '@/lib/supabase/server';
 import { AuthFormState } from '@/types/auth';
 import {
   createUserSchema,
   updateUserSchema,
 } from '@/validations/auth-validation';
-import z from 'zod';
 
 export async function createUser(prevState: AuthFormState, formData: FormData) {
   let validatedFields = createUserSchema.safeParse({
@@ -19,11 +18,10 @@ export async function createUser(prevState: AuthFormState, formData: FormData) {
   });
 
   if (!validatedFields.success) {
-    const errorsTree = z.treeifyError(validatedFields.error);
     return {
       status: 'error',
       errors: {
-        ...errorsTree,
+        ...validatedFields.error.flatten().fieldErrors,
         _form: [],
       },
     };
@@ -35,7 +33,6 @@ export async function createUser(prevState: AuthFormState, formData: FormData) {
       'users',
       validatedFields.data.avatar_url
     );
-
     if (errors) {
       return {
         status: 'error',
@@ -92,11 +89,10 @@ export async function updateUser(prevState: AuthFormState, formData: FormData) {
   });
 
   if (!validatedFields.success) {
-    const errorsTree = z.treeifyError(validatedFields.error);
     return {
       status: 'error',
       errors: {
-        ...errorsTree,
+        ...validatedFields.error.flatten().fieldErrors,
         _form: [],
       },
     };
@@ -110,7 +106,6 @@ export async function updateUser(prevState: AuthFormState, formData: FormData) {
       validatedFields.data.avatar_url,
       oldAvatarUrl.split('/images/')[1]
     );
-
     if (errors) {
       return {
         status: 'error',
@@ -154,4 +149,39 @@ export async function updateUser(prevState: AuthFormState, formData: FormData) {
   return {
     status: 'success',
   };
+}
+
+export async function deleteUser(prevState: AuthFormState, formData: FormData) {
+  const supabase = await createClient({ isAdmin: true });
+  const image = formData.get('avatar_url') as string;
+  const { status, errors } = await deleteFile(
+    'images',
+    image.split('/images/')[1]
+  );
+
+  if (status === 'error') {
+    return {
+      status: 'error',
+      errors: {
+        ...prevState.errors,
+        _form: [errors?._form?.[0] ?? 'Unknown error'],
+      },
+    };
+  }
+
+  const { error } = await supabase.auth.admin.deleteUser(
+    formData.get('id') as string
+  );
+
+  if (error) {
+    return {
+      status: 'error',
+      errors: {
+        ...prevState.errors,
+        _form: [error.message],
+      },
+    };
+  }
+
+  return { status: 'success' };
 }

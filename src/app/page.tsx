@@ -7,7 +7,7 @@ export default function Home() {
       <h1 className="text-4xl font-semibold ">
         Welcome, Diar Gumilang Suhendi
       </h1>
-      <Link href="/dashboard">
+      <Link href="/admin">
         <Button className="bg-teal-500 text-white">Access Dashboard</Button>
       </Link>
     </div>
