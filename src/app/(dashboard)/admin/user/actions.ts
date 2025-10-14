@@ -7,6 +7,7 @@ import {
   createUserSchema,
   updateUserSchema,
 } from '@/validations/auth-validation';
+import z from 'zod';
 
 export async function createUser(prevState: AuthFormState, formData: FormData) {
   let validatedFields = createUserSchema.safeParse({
@@ -18,10 +19,12 @@ export async function createUser(prevState: AuthFormState, formData: FormData) {
   });
 
   if (!validatedFields.success) {
+    const treeifiedError = z.treeifyError(validatedFields.error);
+
     return {
       status: 'error',
       errors: {
-        ...validatedFields.error.flatten().fieldErrors,
+        ...treeifiedError.errors,
         _form: [],
       },
     };

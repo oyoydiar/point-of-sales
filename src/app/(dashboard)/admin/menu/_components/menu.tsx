@@ -15,6 +15,7 @@ import { Menu } from '@/validations/menu-validation';
 import Image from 'next/image';
 import { cn, convertIDR } from '@/lib/utils';
 import { HEADER_TABLE_MENU } from '@/constants/menu-constant';
+import DialogCreateMenu from './dialog-create-menu';
 
 export default function MenuManagement() {
   const supabase = createClient();
@@ -77,7 +78,7 @@ export default function MenuManagement() {
         menu.category,
         <div>
           <p>Base: {convertIDR(menu.price)}</p>
-          <p>Discount: {convertIDR(menu.discount)}</p>
+          <p>Discount: {menu.discount > 0 ? menu.discount + '%' : '-'}</p>
           <p>
             After Discount:{' '}
             {convertIDR(menu.price - (menu.price * menu.discount) / 100)}
@@ -134,10 +135,6 @@ export default function MenuManagement() {
       : 0;
   }, [menus]);
 
-  const handleChangeAction = (open: boolean) => {
-    if (!open) setSelectedAction(null);
-  };
-
   return (
     <div className="w-full">
       <div className="flex flex-col lg:flex-row mb-4 gap-2 justify-between w-full">
@@ -151,6 +148,7 @@ export default function MenuManagement() {
             <DialogTrigger asChild>
               <Button variant="outline">Create</Button>
             </DialogTrigger>
+            <DialogCreateMenu refetch={refetch} />
           </Dialog>
         </div>
       </div>
