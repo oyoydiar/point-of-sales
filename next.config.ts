@@ -8,8 +8,17 @@ const nextConfig: NextConfig = {
   },
   devIndicators: false,
   images: {
-    domains: ['gsydmhwfexnceolzergi.supabase.co'],
+    domains: [
+      'gsydmhwfexnceolzergi.storage.supabase.co',
+      'gsydmhwfexnceolzergi.supabase.co',
+    ],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'gsydmhwfexnceolzergi.storage.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
       {
         protocol: 'https',
         hostname: 'gsydmhwfexnceolzergi.supabase.co',

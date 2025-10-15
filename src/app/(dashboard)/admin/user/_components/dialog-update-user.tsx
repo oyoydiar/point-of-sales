@@ -65,7 +65,7 @@ export default function DialogUpdateUser({
     }
 
     if (updateUserState?.status === 'success') {
-      toast.success('Create User Success');
+      toast.success('Update User Success');
       form.reset();
       handleChangeAction?.(false);
       refetch();

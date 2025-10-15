@@ -88,11 +88,9 @@ export default function FormUser<T extends FieldValues>({
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <div className="flex justify-end">
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? <Loader2 className="animate-spin" /> : 'Create'}
-              </Button>
-            </div>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? <Loader2 className="animate-spin" /> : type}
+            </Button>
           </DialogFooter>
         </form>
       </Form>

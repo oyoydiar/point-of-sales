@@ -16,6 +16,7 @@ import Image from 'next/image';
 import { cn, convertIDR } from '@/lib/utils';
 import { HEADER_TABLE_MENU } from '@/constants/menu-constant';
 import DialogCreateMenu from './dialog-create-menu';
+import DialogUpdateMenu from './dialog-update-menu';
 
 export default function MenuManagement() {
   const supabase = createClient();
@@ -66,13 +67,15 @@ export default function MenuManagement() {
       return [
         currentLimit * (currentPage - 1) + index + 1,
         <div className="flex items-center gap-2">
-          <Image
-            src={menu.image_url as string}
-            alt={menu.name}
-            width={40}
-            height={40}
-            className="rounded"
-          />
+          <div className="flex items-center justify-center w-10 h-10 rounded overflow-hidden bg-zinc-800">
+            <Image
+              src={menu.image_url as string}
+              alt={menu.name}
+              width={40}
+              height={40}
+              className="bg-white object-contain h-full w-auto"
+            />
+          </div>
           {menu.name}
         </div>,
         menu.category,
@@ -135,6 +138,10 @@ export default function MenuManagement() {
       : 0;
   }, [menus]);
 
+  const handleChangeAction = (open: boolean) => {
+    if (!open) setSelectedAction(null);
+  };
+
   return (
     <div className="w-full">
       <div className="flex flex-col lg:flex-row mb-4 gap-2 justify-between w-full">
@@ -161,6 +168,12 @@ export default function MenuManagement() {
         currentLimit={currentLimit}
         onChangePage={handleChangePage}
         onChangeLimit={handleChangeLimit}
+      />
+      <DialogUpdateMenu
+        open={selectedAction !== null && selectedAction.type === 'update'}
+        refetch={refetch}
+        currentData={selectedAction?.data}
+        handleChangeAction={handleChangeAction}
       />
     </div>
   );
