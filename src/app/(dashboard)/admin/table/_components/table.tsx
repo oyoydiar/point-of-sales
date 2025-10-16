@@ -1,20 +1,20 @@
 'use client';
 
+import { HEADER_TABLE_TABLE } from '@/constants/table-constant';
+import DialogCreateTable from './dialog-create-table';
 import DataTable from '@/components/commons/data-table';
-import DropdownAction from '@/components/commons/dropdown-action';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useMemo, useState } from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
+import DropdownAction from '@/components/commons/dropdown-action';
+import { Table } from '@/validations/table-validation';
+import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 import useDataTable from '@/hooks/use-data-table';
 import { createClient } from '@/lib/supabase/client';
-import { useQuery } from '@tanstack/react-query';
-import { Pencil, Trash2 } from 'lucide-react';
-import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
-import Image from 'next/image';
-import { cn, convertIDR } from '@/lib/utils';
-import { Table } from '@/validations/table-validation';
-import { HEADER_TABLE_TABLE } from '@/constants/table-constant';
+import { cn } from '@/lib/utils';
 
 export default function TableManagement() {
   const supabase = createClient();
@@ -33,14 +33,14 @@ export default function TableManagement() {
   } = useQuery({
     queryKey: ['tables', currentPage, currentLimit, currentSearch],
     queryFn: async () => {
-      let query = supabase
+      const query = supabase
         .from('tables')
         .select('*', { count: 'exact' })
         .range((currentPage - 1) * currentLimit, currentPage * currentLimit - 1)
         .order('created_at', { ascending: false });
 
       if (currentSearch.trim())
-        query = query.or(
+        query.or(
           `name.ilike.%${currentSearch}%,capacity.ilike.%${currentSearch}%,status.ilike.%${currentSearch}%`
         );
 
@@ -59,6 +59,10 @@ export default function TableManagement() {
     data: Table;
     type: 'update' | 'delete';
   } | null>(null);
+
+  const handleChangeAction = (open: boolean) => {
+    if (!open) setSelectedAction(null);
+  };
 
   const filteredData = useMemo(() => {
     return (tables?.data || []).map((table: Table, index) => {
@@ -121,23 +125,20 @@ export default function TableManagement() {
       : 0;
   }, [tables]);
 
-  const handleChangeAction = (open: boolean) => {
-    if (!open) setSelectedAction(null);
-  };
-
   return (
     <div className="w-full">
       <div className="flex flex-col lg:flex-row mb-4 gap-2 justify-between w-full">
         <h1 className="text-2xl font-bold">Table Management</h1>
         <div className="flex gap-2">
           <Input
-            placeholder="Search by name, capacity or status"
+            placeholder="Search by name, capacity and status"
             onChange={(e) => handleChangeSearch(e.target.value)}
           />
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="outline">Create</Button>
             </DialogTrigger>
+            <DialogCreateTable refetch={refetch} />
           </Dialog>
         </div>
       </div>
