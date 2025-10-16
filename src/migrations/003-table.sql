@@ -10,4 +10,4 @@ create table public.tables (
   primary key (id)
 );
 
-alter table public.tables enable row level security
+alter table public.tables enable row level security;
