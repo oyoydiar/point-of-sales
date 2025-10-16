@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import useDataTable from '@/hooks/use-data-table';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
+import DialogUpdateTable from './dialog-update-table';
 
 export default function TableManagement() {
   const supabase = createClient();
@@ -151,6 +152,12 @@ export default function TableManagement() {
         currentLimit={currentLimit}
         onChangePage={handleChangePage}
         onChangeLimit={handleChangeLimit}
+      />
+      <DialogUpdateTable
+        open={selectedAction !== null && selectedAction.type === 'update'}
+        refetch={refetch}
+        currentData={selectedAction?.data}
+        handleChangeAction={handleChangeAction}
       />
     </div>
   );

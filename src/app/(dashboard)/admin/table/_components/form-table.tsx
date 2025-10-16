@@ -22,15 +22,11 @@ export default function FormTable<T extends FieldValues>({
   onSubmit,
   isLoading,
   type,
-  preview,
-  setPreview,
 }: {
   form: UseFormReturn<T>;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   isLoading: boolean;
   type: 'Create' | 'Update';
-  preview?: Preview;
-  setPreview?: (preview: Preview) => void;
 }) {
   return (
     <DialogContent className="sm:max-w-[425px] max-h-[90vh]">
