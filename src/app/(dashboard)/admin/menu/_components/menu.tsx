@@ -21,6 +21,7 @@ import DialogDeleteMenu from './dialog-delete-menu';
 
 export default function MenuManagement() {
   const supabase = createClient();
+
   const {
     currentPage,
     currentLimit,
@@ -29,6 +30,7 @@ export default function MenuManagement() {
     handleChangeLimit,
     handleChangeSearch,
   } = useDataTable();
+
   const {
     data: menus,
     isLoading,
