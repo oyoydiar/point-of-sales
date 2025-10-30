@@ -5,23 +5,22 @@ import { Input } from '@/components/ui/input';
 import { FILTER_MENU } from '@/constants/order-constant';
 import useDataTable from '@/hooks/use-data-table';
 import { createClient } from '@/lib/supabase/client';
-import { Cart } from '@/types/order';
-import { Menu } from '@/validations/menu-validation';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { toast } from 'sonner';
 import CardMenu from './card-menu';
-import CartSection from './cart';
 import LoadingCardMenu from './loading-card-menu';
+import CartSection from './cart';
+import { startTransition, useActionState, useState } from 'react';
+import { Cart } from '@/types/order';
+import { Menu } from '@/validations/menu-validation';
+import { addOrderItem } from '../../../actions';
+import { INITIAL_STATE_ACTION } from '@/constants/general-constant';
 
 export default function AddOrderItem({ id }: { id: string }) {
   const supabase = createClient();
-
   const {
-    currentPage,
     currentSearch,
     currentFilter,
-    handleChangePage,
     handleChangeSearch,
     handleChangeFilter,
   } = useDataTable();
@@ -32,11 +31,13 @@ export default function AddOrderItem({ id }: { id: string }) {
       const query = supabase
         .from('menus')
         .select('*', { count: 'exact' })
-        .order('created_at', { ascending: false })
+        .order('created_at')
         .eq('is_available', true)
         .ilike('name', `%${currentSearch}%`);
 
-      if (currentFilter.trim()) query.eq('category', currentFilter);
+      if (currentFilter) {
+        query.eq('category', currentFilter);
+      }
 
       const result = await query;
 
@@ -70,9 +71,8 @@ export default function AddOrderItem({ id }: { id: string }) {
 
   const [carts, setCarts] = useState<Cart[]>([]);
 
-  const handleAddtoCart = (menu: Menu, action: 'increment' | 'decrement') => {
+  const handleAddToCart = (menu: Menu, action: 'increment' | 'decrement') => {
     const existingItem = carts.find((item) => item.menu_id === menu.id);
-
     if (existingItem) {
       if (action === 'decrement') {
         if (existingItem.quantity > 1) {
@@ -111,6 +111,24 @@ export default function AddOrderItem({ id }: { id: string }) {
     }
   };
 
+  const [addOrderItemState, addOrderItemAction, isPendingAddOrderItem] =
+    useActionState(addOrderItem, INITIAL_STATE_ACTION);
+
+  const handleOrder = async () => {
+    const data = {
+      order_id: id,
+      items: carts.map((item) => ({
+        order_id: order?.id ?? '',
+        ...item,
+        status: 'pending',
+      })),
+    };
+
+    startTransition(() => {
+      addOrderItemAction(data);
+    });
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-4 w-full">
       <div className="space-y-4 lg:w-2/3">
@@ -122,7 +140,7 @@ export default function AddOrderItem({ id }: { id: string }) {
                 <Button
                   key={item.value}
                   onClick={() => handleChangeFilter(item.value)}
-                  value={currentFilter === item.value ? 'default' : 'outline'}
+                  variant={currentFilter === item.value ? 'default' : 'outline'}
                 >
                   {item.label}
                 </Button>
@@ -142,7 +160,7 @@ export default function AddOrderItem({ id }: { id: string }) {
               <CardMenu
                 menu={menu}
                 key={`menu-${menu.id}`}
-                onAddToCart={handleAddtoCart}
+                onAddToCart={handleAddToCart}
               />
             ))}
           </div>
@@ -156,7 +174,9 @@ export default function AddOrderItem({ id }: { id: string }) {
           order={order}
           carts={carts}
           setCarts={setCarts}
-          onAddToCart={handleAddtoCart}
+          onAddToCart={handleAddToCart}
+          isLoading={isPendingAddOrderItem}
+          onOrder={handleOrder}
         />
       </div>
     </div>
