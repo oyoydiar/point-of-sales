@@ -2,25 +2,25 @@
 
 import DataTable from '@/components/commons/data-table';
 import { Button } from '@/components/ui/button';
+import { HEADER_TABLE_DETAIL_ORDER } from '@/constants/order-constant';
+import useDataTable from '@/hooks/use-data-table';
+import { createClient } from '@/lib/supabase/client';
+import { cn, convertIDR } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import Image from 'next/image';
+import Link from 'next/link';
+import { startTransition, useActionState, useEffect, useMemo } from 'react';
+import { toast } from 'sonner';
+import Summary from './summary';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { INITIAL_STATE_ACTION } from '@/constants/general-constant';
-import { HEADER_TABLE_DETAIL_ORDER } from '@/constants/order-constant';
-import useDataTable from '@/hooks/use-data-table';
-import { createClient } from '@/lib/supabase/client';
-import { cn, convertIDR } from '@/lib/utils';
-import { useQuery } from '@tanstack/react-query';
 import { EllipsisVertical } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { startTransition, useActionState, useEffect, useMemo } from 'react';
-import { toast } from 'sonner';
-import { updateStatusOrderItem } from '../../actions';
-import Summary from './summary';
+import { updateStatusOrderitem } from '../../actions';
+import { INITIAL_STATE_ACTION } from '@/constants/general-constant';
 
 export default function DetailOrder({ id }: { id: string }) {
   const supabase = createClient();
@@ -32,7 +32,7 @@ export default function DetailOrder({ id }: { id: string }) {
     queryFn: async () => {
       const result = await supabase
         .from('orders')
-        .select('id, customer_name, status, payment_url, tables (name, id)')
+        .select('id, customer_name, status, payment_token, tables (name, id)')
         .eq('order_id', id)
         .single();
 
@@ -60,7 +60,7 @@ export default function DetailOrder({ id }: { id: string }) {
         .order('status');
 
       if (result.error)
-        toast.error('Get Order Menu data failed', {
+        toast.error('Get order menu data failed', {
           description: result.error.message,
         });
 
@@ -70,7 +70,7 @@ export default function DetailOrder({ id }: { id: string }) {
   });
 
   const [updateStatusOrderState, updateStatusOrderAction] = useActionState(
-    updateStatusOrderItem,
+    updateStatusOrderitem,
     INITIAL_STATE_ACTION
   );
 
@@ -79,8 +79,8 @@ export default function DetailOrder({ id }: { id: string }) {
     status: string;
   }) => {
     const formData = new FormData();
-    Object.entries(data).forEach(([keyof, value]) => {
-      formData.append(keyof, value);
+    Object.entries(data).forEach(([Key, value]) => {
+      formData.append(Key, value);
     });
 
     startTransition(() => {
@@ -181,10 +181,10 @@ export default function DetailOrder({ id }: { id: string }) {
       <div className="flex items-center justify-between gap-4 w-full">
         <h1 className="text-2xl font-bold">Detail Order</h1>
         <Link href={`/order/${id}/add`}>
-          <Button>Add order item</Button>
+          <Button>Add Order Item</Button>
         </Link>
       </div>
-      <div className="flex flex-row gap-4 w-full">
+      <div className="flex flex-col lg:flex-row gap-4 w-full">
         <div className="lg:w-2/3">
           <DataTable
             header={HEADER_TABLE_DETAIL_ORDER}
