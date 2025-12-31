@@ -31,6 +31,7 @@ export default function Summary({
   const { grandTotal, totalPrice, tax, service } = usePricing(orderMenu);
 
   const isAllServed = useMemo(() => {
+    if (!orderMenu || orderMenu.length === 0) return false;
     return orderMenu?.every((item) => item.status === 'served');
   }, [orderMenu]);
 
