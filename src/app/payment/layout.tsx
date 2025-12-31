@@ -1,5 +1,4 @@
 import { DarkModeToggle } from '@/components/commons/dark-mode-toggle';
-import { Coffee } from 'lucide-react';
 import { ReactNode } from 'react';
 
 type AuthLayoutProps = {

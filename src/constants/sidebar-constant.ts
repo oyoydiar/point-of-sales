@@ -34,7 +34,13 @@ export const SIDEBAR_MENU_LIST = {
       icon: Users,
     },
   ],
-  cashier: [],
+  cashier: [
+    {
+      title: 'Order',
+      url: '/order',
+      icon: Album,
+    },
+  ],
   kitchen: [],
 };
 
