@@ -1,7 +1,5 @@
-'use client';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-import { startTransition, useActionState, useEffect } from 'react';
+import { startTransition, useActionState, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { createOrder } from '../actions';
 import { toast } from 'sonner';
@@ -27,10 +25,8 @@ import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
 
 export default function DialogCreateOrder({
-  refetch,
   tables,
 }: {
-  refetch: () => void;
   tables: Table[] | undefined | null;
 }) {
   const form = useForm<OrderForm>({
@@ -63,7 +59,6 @@ export default function DialogCreateOrder({
       toast.success('Create Order Success');
       form.reset();
       document.querySelector<HTMLButtonElement>('[data-state="open"]')?.click();
-      refetch();
     }
   }, [createOrderState]);
 

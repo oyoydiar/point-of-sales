@@ -1,7 +1,7 @@
 import AddOrderItem from './_components/add-order-item';
 
 export const metadata = {
-  title: 'WPU Cafe | Add Order Item',
+  title: 'Point of Sales | Add Order Item',
 };
 
 export default async function AddOrderItemPage({

@@ -47,7 +47,7 @@ export default function AppSidebar() {
                 <div className="bg-teal-500 flex p-2 items-center justify-center rounded-md">
                   <Store className="size-4" />
                 </div>
-                WPU Cafe
+                Point of Sales
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
