@@ -246,20 +246,20 @@ export default function Dashboard() {
             {lastOrder && lastOrder.length > 0 ? (
               lastOrder.map((order) => (
                 <div
-                  key={order.id}
+                  key={order?.id}
                   className="flex items-center gap-4 justify-between mb-4"
                 >
                   <div>
-                    <h3 className="font-semibold">{order.customer_name}</h3>
+                    <h3 className="font-semibold">{order?.customer_name}</h3>
                     <p className="text-sm text-muted-foreground">
                       Table:{' '}
-                      {(order.tables as unknown as { name: string }).name}
+                      {(order?.tables as unknown as { name: string })?.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       Order ID: {order.id}
                     </p>
                   </div>
-                  <Link href={`/order/${order.order_id}`}>
+                  <Link href={`/order/${order?.order_id}`}>
                     <Button size="sm">Detail</Button>
                   </Link>
                 </div>
