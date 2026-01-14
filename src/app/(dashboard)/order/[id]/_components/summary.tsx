@@ -22,9 +22,10 @@ export default function Summary({
     customer_name: string;
     tables: { name: string }[];
     status: string;
+    payment_token: string;
   };
   orderMenu:
-    | { menus: Menu; quantity: number; status: string }[]
+    | { menus: Menu; quantity: number; status: string; nominal: number }[]
     | null
     | undefined;
   id: string;
@@ -45,13 +46,17 @@ export default function Summary({
   ] = useActionState(generatePayment, INITIAL_STATE_GENERATE_PAYMENT);
 
   const handleGeneratePayment = () => {
-    const formData = new FormData();
-    formData.append('id', id || '');
-    formData.append('gross_amount', grandTotal.toString());
-    formData.append('customer_name', order?.customer_name || '');
-    startTransition(() => {
-      generatePaymentAction(formData);
-    });
+    if (order?.payment_token) {
+      window.snap.pay(order.payment_token);
+    } else {
+      const formData = new FormData();
+      formData.append('id', id || '');
+      formData.append('gross_amount', grandTotal.toString());
+      formData.append('customer_name', order?.customer_name || '');
+      startTransition(() => {
+        generatePaymentAction(formData);
+      });
+    }
   };
 
   useEffect(() => {
