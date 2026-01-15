@@ -95,6 +95,30 @@ export default function OrderManagement() {
     },
   });
 
+  const { data: activeOrders, refetch: refetchActiveOrders } = useQuery({
+    queryKey: ['active-orders'],
+    queryFn: async () => {
+      const query = supabase
+        .from('orders')
+        .select(
+          `
+            id, order_id, customer_name, status, payment_token, tables (name, id)
+            `
+        )
+        .in('status', ['process', 'reserved'])
+        .order('created_at');
+
+      const result = await query;
+
+      if (result.error)
+        toast.error('Get Order data failed', {
+          description: result.error.message,
+        });
+
+      return result.data;
+    },
+  });
+
   useEffect(() => {
     const channel = supabase
       .channel('change-order')
@@ -108,6 +132,7 @@ export default function OrderManagement() {
         () => {
           refetchOrders();
           refetchTables();
+          refetchActiveOrders();
         }
       )
       .subscribe();
@@ -301,7 +326,7 @@ export default function OrderManagement() {
         </TabsContent>
 
         <TabsContent value="map">
-          <TableMap tables={tables || []} />
+          <TableMap tables={tables || []} activeOrders={activeOrders || []} />
         </TabsContent>
       </Tabs>
     </div>
