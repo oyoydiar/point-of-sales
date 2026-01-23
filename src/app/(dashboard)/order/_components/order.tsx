@@ -18,6 +18,7 @@ import {
 } from 'react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Table } from '@/validations/table-validation';
 import { HEADER_TABLE_ORDER } from '@/constants/order-constant';
 import { updateReservation } from '../actions';
 import { INITIAL_STATE_ACTION } from '@/constants/general-constant';
@@ -180,7 +181,6 @@ export default function OrderManagement() {
 
     if (reservedState?.status === 'success') {
       toast.success('Update Reservation Success');
-      refetchOrders();
     }
   }, [reservedState]);
 
@@ -326,7 +326,17 @@ export default function OrderManagement() {
         </TabsContent>
 
         <TabsContent value="map">
-          <TableMap tables={tables || []} activeOrders={activeOrders || []} />
+          <TableMap
+            tables={tables || []}
+            activeOrders={activeOrders || []}
+            handleReservation={(
+              id: string,
+              table_id: string,
+              status: string
+            ) => {
+              handleReservation({ id, table_id, status });
+            }}
+          />
         </TabsContent>
       </Tabs>
     </div>
