@@ -3,7 +3,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { TableFormState } from '@/types/table';
 import { tableSchema } from '@/validations/table-validation';
-import z from 'zod';
 
 export async function createTable(
   prevState: TableFormState,
@@ -17,12 +16,10 @@ export async function createTable(
   });
 
   if (!validatedFields.success) {
-    const treeifiedError = z.treeifyError(validatedFields.error);
-
     return {
       status: 'error',
       errors: {
-        ...treeifiedError.errors,
+        ...validatedFields.error.flatten().fieldErrors,
         _form: [],
       },
     };
@@ -82,6 +79,8 @@ export async function updateTable(
       description: validatedFields.data.description,
       capacity: validatedFields.data.capacity,
       status: validatedFields.data.status,
+      position_x: 0,
+      position_y: 0,
     })
     .eq('id', formData.get('id'));
 
